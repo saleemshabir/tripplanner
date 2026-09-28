@@ -1,0 +1,1007 @@
+/* ---------------------------------------------------------
+   Waypoint — travel journal design tokens
+   Parchment + ink-navy journal, ochre stamp accent, teal trim
+--------------------------------------------------------- */
+:root {
+  --ink: #1e2b3a;
+  --ink-soft: #435269;
+  --parchment: #f4efe2;
+  --parchment-dim: #ece4d0;
+  --teal: #2f6f6b;
+  --teal-dark: #234f4c;
+  --ochre: #c98a2d;
+  --ochre-dark: #a06c1f;
+  --line: #ded2ae;
+  --danger: #a8432f;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--parchment);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+/* ---------------- Layout ---------------- */
+
+.app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  background: var(--ink);
+  color: var(--parchment);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar__brand-mark {
+  font-size: 1.6rem;
+  color: var(--ochre);
+}
+
+.sidebar__brand-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.sidebar__brand-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: #a9b6c9;
+}
+
+.sidebar__status {
+  font-size: 0.85rem;
+  color: #a9b6c9;
+}
+
+.sidebar__status--error {
+  color: #e2a394;
+}
+
+.main {
+  padding: 40px 48px;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 24px 20px;
+  }
+}
+
+/* ---------------- Buttons ---------------- */
+
+.btn {
+  border: none;
+  border-radius: 3px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: transform 0.08s ease, background 0.15s ease;
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--ochre);
+  color: #241705;
+}
+
+.btn--primary:hover {
+  background: var(--ochre-dark);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.btn--ghost:hover {
+  background: var(--parchment-dim);
+}
+
+.btn--small {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  background: var(--teal);
+  color: #fff;
+}
+
+.btn--small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--small:hover:not(:disabled) {
+  background: var(--teal-dark);
+}
+
+.btn--danger-ghost {
+  margin-top: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--danger);
+  padding: 8px 0;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------- Trip list (sidebar) ---------------- */
+
+.trip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.trip-card {
+  display: flex;
+  align-items: stretch;
+  background: #26374a;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.trip-card--active {
+  border-color: var(--ochre);
+  background: #2c4056;
+}
+
+.trip-card__main {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  padding: 12px 10px;
+}
+
+.trip-card__pin {
+  color: var(--ochre);
+  font-size: 0.8rem;
+  margin-top: 3px;
+}
+
+.trip-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trip-card__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--parchment);
+}
+
+.trip-card__destination {
+  font-size: 0.8rem;
+  color: #b9c4d6;
+}
+
+.trip-card__dates {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #93a2b8;
+  margin-top: 2px;
+}
+
+.trip-card__progress {
+  font-size: 0.72rem;
+  color: var(--ochre);
+  margin-top: 2px;
+}
+
+.trip-card__delete {
+  background: none;
+  border: none;
+  color: #7c8aa0;
+  padding: 0 10px;
+  font-size: 0.8rem;
+}
+
+.trip-card__delete:hover {
+  color: #e2a394;
+}
+
+/* ---------------- Passport page (trip detail) ---------------- */
+
+.passport {
+  max-width: 640px;
+  background: #fffdf7;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 36px 40px 44px;
+  position: relative;
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.passport__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 20px;
+}
+
+.passport__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--teal-dark);
+  margin: 0 0 4px;
+}
+
+.passport__title {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.passport__subtitle {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+.passport__header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.passport__stamp-mark {
+  border: 2px solid var(--ochre);
+  border-radius: 50%;
+  color: var(--ochre-dark);
+  width: 66px;
+  height: 66px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-8deg);
+  font-family: var(--font-mono);
+}
+
+.passport__edit-link {
+  background: none;
+  border: none;
+  color: var(--teal-dark);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0;
+}
+
+.passport__edit-link:hover {
+  color: var(--teal);
+}
+
+.passport__stamp-mark span {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.passport__stamp-mark small {
+  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+}
+
+.passport__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.passport__meta > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.passport__meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+}
+
+.passport__meta-value {
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+
+.passport__meta-divider {
+  color: var(--teal);
+  font-size: 1.1rem;
+}
+
+.passport__notes {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: var(--parchment-dim);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.passport__progress-track {
+  margin-top: 26px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--parchment-dim);
+  overflow: hidden;
+}
+
+.passport__progress-fill {
+  height: 100%;
+  background: var(--teal);
+  transition: width 0.25s ease;
+}
+
+.passport__progress-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+}
+
+.passport__section-heading {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin: 30px 0 12px;
+}
+
+/* ---------------- Place list ---------------- */
+
+.place-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.place-list__empty {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  font-style: italic;
+  padding: 10px 0;
+}
+
+.place-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.place-row--done {
+  background: var(--parchment-dim);
+}
+
+.place-row--done .place-row__name {
+  text-decoration: line-through;
+  color: var(--ink-soft);
+}
+
+.place-row__stamp {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--teal);
+  background: transparent;
+  color: var(--teal);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.place-row--done .place-row__stamp {
+  background: var(--teal);
+  color: #fff;
+}
+
+.place-row__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-row__name {
+  font-size: 0.95rem;
+}
+
+.place-row__notes {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.place-row__delete {
+  background: none;
+  border: none;
+  color: #b9ac86;
+  font-size: 0.8rem;
+}
+
+.place-row__delete:hover {
+  color: var(--danger);
+}
+
+/* ---------------- Add place form ---------------- */
+
+.add-place-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.add-place-form__name,
+.add-place-form__notes {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.add-place-form__name {
+  flex: 1 1 200px;
+}
+
+.add-place-form__notes {
+  flex: 1 1 160px;
+}
+
+/* ---------------- Empty state ---------------- */
+
+.empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  color: var(--ink-soft);
+  max-width: 420px;
+}
+
+.empty-state__mark {
+  font-size: 2rem;
+  color: var(--ochre);
+  margin-bottom: 10px;
+}
+
+.empty-state h2 {
+  font-family: var(--font-display);
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+/* ---------------- New trip modal ---------------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 43, 58, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 10;
+}
+
+.modal-card {
+  background: #fffdf7;
+  border-radius: 6px;
+  padding: 28px 30px 24px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-card__heading {
+  font-family: var(--font-display);
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.field input,
+.field textarea {
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field {
+  flex: 1;
+}
+
+.form-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.modal-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* =========================================================
+   Auth screen
+========================================================= */
+
+.boot-screen {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.auth-screen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 800px) {
+  .auth-screen {
+    grid-template-columns: 1fr;
+  }
+  .auth-panel {
+    display: none;
+  }
+}
+
+.auth-panel {
+  background: var(--ink);
+  color: var(--parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Faint compass-rose texture behind the brand block. */
+.auth-panel::after {
+  content: '✦';
+  position: absolute;
+  font-size: 30rem;
+  color: rgba(201, 138, 45, 0.06);
+  line-height: 1;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.auth-panel__brand {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+}
+
+.auth-panel__mark {
+  font-size: 2.4rem;
+  color: var(--ochre);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.auth-panel__brand h1 {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  margin: 0 0 10px;
+}
+
+.auth-panel__brand p {
+  color: #a9b6c9;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.auth-form-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form__heading {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.auth-form__sub {
+  margin: -8px 0 6px;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.auth-form__switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 4px 0 0;
+}
+
+.auth-form__switch button {
+  background: none;
+  border: none;
+  color: var(--teal-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   Filters
+========================================================= */
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #33455a;
+}
+
+.filters__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filters__search-icon {
+  position: absolute;
+  left: 10px;
+  color: #7c8aa0;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.filters__search input {
+  width: 100%;
+  padding: 9px 10px 9px 30px;
+  border-radius: 4px;
+  border: 1px solid #3a4c63;
+  background: #26374a;
+  color: var(--parchment);
+  font-size: 0.85rem;
+}
+
+.filters__search input::placeholder,
+.filters__companion::placeholder {
+  color: #7c8aa0;
+}
+
+.filters__row {
+  display: flex;
+  gap: 8px;
+}
+
+.filters__row select {
+  flex: 1;
+  padding: 8px 8px;
+  border-radius: 4px;
+  border: 1px solid #3a4c63;
+  background: #26374a;
+  color: var(--parchment);
+  font-size: 0.82rem;
+  font-family: inherit;
+}
+
+.filters__companion {
+  padding: 9px 10px;
+  border-radius: 4px;
+  border: 1px solid #3a4c63;
+  background: #26374a;
+  color: var(--parchment);
+  font-size: 0.85rem;
+}
+
+.filters__reset {
+  background: none;
+  border: none;
+  color: var(--ochre);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 2px 0 0;
+  align-self: flex-start;
+}
+
+/* =========================================================
+   Sidebar additions
+========================================================= */
+
+.sidebar__logout {
+  margin-top: auto;
+  background: none;
+  border: 1px solid #3a4c63;
+  color: #a9b6c9;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.82rem;
+}
+
+.sidebar__logout:hover {
+  border-color: #52667f;
+  color: var(--parchment);
+}
+
+.trip-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+.trip-card__budget {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #8fc5b6;
+}
+
+.trip-card__budget--over {
+  color: #e2a394;
+}
+
+.trip-card__companions {
+  font-size: 0.72rem;
+  color: #93a2b8;
+  font-style: italic;
+  margin-top: 3px;
+}
+
+/* =========================================================
+   Companions + budget (passport page)
+========================================================= */
+
+.companions {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.companions__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+}
+
+.companions__chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.companions__chip {
+  background: var(--parchment-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 11px;
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+
+.budget {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--parchment-dim);
+}
+
+.budget__figures {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.budget__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.budget__figure-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-soft);
+}
+
+.budget__figure-value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.budget__figure-value--over {
+  color: var(--danger);
+}
+
+.budget__track {
+  margin-top: 14px;
+  height: 6px;
+  border-radius: 3px;
+  background: #ded2ae;
+  overflow: hidden;
+}
+
+.budget__fill {
+  height: 100%;
+  background: var(--ochre);
+  transition: width 0.25s ease;
+}
+
+.budget__fill--over {
+  background: var(--danger);
+}
+
+.budget__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  margin: 7px 0 0;
+}
+
+/* =========================================================
+   Place cost controls
+========================================================= */
+
+.place-row__cost {
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 3px;
+  color: var(--teal-dark);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.place-row__cost:hover {
+  background: var(--parchment-dim);
+  border-style: solid;
+}
+
+.place-row__cost-input {
+  width: 90px;
+  padding: 4px 7px;
+  border: 1px solid var(--teal);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.add-place-form__cost {
+  flex: 0 0 90px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.field--narrow {
+  flex: 0 0 120px;
+}
+
+.field select {
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
