@@ -1,143 +1,166 @@
 # Waypoint — Travel Trip Planner (MERN)
 
-A full-stack trip planner with user accounts: create trips with destinations,
-dates, an estimated budget and travel companions; add places to visit, record
-what you spent at each one, and mark them as visited. Search and filter your
-trips. Built with MongoDB, Express, React (Vite) and Node.js.
+Waypoint is a full-stack trip planner that lets users log trips, keep track of costs, manage packing lists, and review their plan in one place. The project uses Node.js, Express, MongoDB and React with Vite.
 
-**Features**
-- Login / signup with hashed passwords and JWT sessions — each user sees only their own trips
-- Trips with destination, dates, estimated budget + currency, companions and notes
-- Places per trip with a cost field, so spend is tracked against the budget
-- Budget summary showing estimated / spent / remaining, with an over-budget warning
-- Search trips by title, destination, notes or companion; filter by upcoming / ongoing / past; sort by date, budget or title
+## Features
 
-```
+- Login and signup with secure password validation and JWT sessions
+- Trip list with search, status filtering, companion filtering and sorting
+- Budget tracking with estimated spend, remaining balance and over-budget warnings
+- Places with category labels, cost tracking and visited states
+- Packing checklist with per-item done tracking
+- Pagination for large trip lists
+- Dark mode for both app and forms
+- Export to PDF for a trip summary and place table
+- Toast notifications and confirmation dialog UX improvements
+- Server-side security hardening with CORS, helmet, sanitization and rate limiting
+
+## Project structure
+
+```text
 travel-trip-planner/
 ├── backend/     Express API + Mongoose models
-└── frontend/    React (Vite) single-page app
+├── frontend/    React + Vite app
+├── .gitignore
+├── README.md
+└── package-lock.json
 ```
 
 ## 1. Prerequisites
 
-- Node.js 18+ and npm
-- A MongoDB database — either:
-  - MongoDB running locally (`mongod`), or
-  - A free cluster on [MongoDB Atlas](https://www.mongodb.com/atlas)
+- Node.js 18+
+- npm
+- MongoDB Atlas cluster or a local MongoDB instance
 
 ## 2. Backend setup
 
 ```bash
 cd backend
 npm install
-cp .env.example .env
+copy .env.example .env
 ```
 
-Edit `.env` and set `MONGO_URI` to your database connection string, e.g.:
+On macOS or Linux use `cp .env.example .env` instead. Then set the values in `.env`:
 
-```
+```env
 MONGO_URI=mongodb://127.0.0.1:27017/travel-trip-planner
 PORT=5000
 JWT_SECRET=change-me-to-a-long-random-secret
 JWT_EXPIRES_IN=7d
+CLIENT_URL=http://localhost:5173
 ```
 
-`JWT_SECRET` signs your login tokens — set it to any long random string.
+`MONGO_URI` and `JWT_SECRET` are required. `CLIENT_URL` can contain multiple origins separated by commas.
 
 Start the API:
 
 ```bash
-npm run dev     # with nodemon, auto-restarts on changes
+npm run dev
 # or
 npm start
 ```
 
-You should see `Server running on http://localhost:5000`.
+You should see a message similar to:
+
+```text
+Server running on http://localhost:5000
+```
 
 ## 3. Frontend setup
-
-In a second terminal:
 
 ```bash
 cd frontend
 npm install
+copy .env.example .env
 npm run dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`). The dev server
-proxies any request to `/api/*` through to the backend on port 5000
-(configured in `vite.config.js`), so no extra setup is needed.
+Set `VITE_API_URL` in the frontend `.env` file if you are not using the default local proxy:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Open the URL printed by Vite (usually `http://localhost:5173`).
 
 ## 4. Using the app
 
-- On first run, click **Sign up** to create an account, then log in.
-- Click **"+ Log a trip"** to create a trip (title, destination, dates, budget, currency, companions, notes).
-- Select a trip in the left journal list to open its page.
-- Use the **"Add a place to visit…"** field to add stops for that trip.
-- Tap the circle next to a place to mark it visited / not visited.
-- Click a place's cost chip to record what you spent there — the budget summary updates live.
-- Use the search box and the status / sort / companion filters in the sidebar to find trips.
-- Use **"Edit trip"** on the passport page to change dates, budget or companions.
-- Delete individual places or whole trips with the ✕ / "Delete this trip" controls.
+- Sign up with a valid email and a password of at least 8 characters containing a letter and a number.
+- Log a trip with title, destination, dates, budget and companions.
+- Add places with cost and category, then mark them visited.
+- Use the sidebar filters to search, sort and paginate trips.
+- Use the trip detail page to review spending by category and manage the packing list.
+- Export a trip summary as a PDF from the detail view.
+- Switch between light and dark mode from the sidebar.
 
 ## 5. API reference
 
-### Auth — base URL `/api/auth`
+All protected routes require an `Authorization: Bearer <token>` header.
 
-| Method | Route        | Description                       |
-|--------|--------------|-----------------------------------|
-| POST   | `/register`  | Create an account, returns a token |
-| POST   | `/login`     | Log in, returns a token            |
-| GET    | `/me`        | Current user (requires token)      |
+### Authentication
 
-### Trips — base URL `/api/trips`
+| Method | Route | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Create a new account |
+| POST | `/api/auth/login` | Log in and receive a JWT |
+| GET | `/api/auth/me` | Get the current logged-in user |
 
-All trip routes require an `Authorization: Bearer <token>` header.
+### Trips
 
-| Method | Route                          | Description                    |
-|--------|---------------------------------|---------------------------------|
-| GET    | `/`                             | List your trips (see filters)  |
-| POST   | `/`                             | Create a trip                  |
-| GET    | `/:id`                          | Get one trip                   |
-| PUT    | `/:id`                          | Update a trip                  |
-| DELETE | `/:id`                          | Delete a trip                  |
-| POST   | `/:id/places`                   | Add a place to a trip          |
-| PUT    | `/:id/places/:placeId`          | Update / toggle a place        |
-| DELETE | `/:id/places/:placeId`          | Remove a place                 |
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/trips` | List trips for the logged-in user with filters and pagination |
+| POST | `/api/trips` | Create a trip |
+| GET | `/api/trips/:id` | Fetch one trip |
+| PUT | `/api/trips/:id` | Update a trip |
+| DELETE | `/api/trips/:id` | Delete a trip |
+| POST | `/api/trips/:id/places` | Add a place |
+| PUT | `/api/trips/:id/places/:placeId` | Update a place |
+| DELETE | `/api/trips/:id/places/:placeId` | Remove a place |
+| POST | `/api/trips/:id/packing` | Add a packing item |
+| PUT | `/api/trips/:id/packing/:itemId` | Toggle a packing item |
+| DELETE | `/api/trips/:id/packing/:itemId` | Remove a packing item |
 
-Trip body: `{ title, destination, startDate, endDate, budget, currency, companions, notes }`
-Place body: `{ name, notes, cost, done }`
+### Trip query params
 
-`companions` accepts either an array of names or a comma-separated string.
+The main trip list supports the following query params:
 
-**Query parameters on `GET /api/trips`:**
+- `search` — text match against trip title, destination, notes and companions
+- `status` — `upcoming`, `ongoing`, `past`
+- `companion` — filter by companion name
+- `sort` — `date`, `budget`, `title`
+- `page` — page number, default 1
+- `limit` — page size, default 10
 
-| Param       | Values                          | Description                                |
-|-------------|----------------------------------|--------------------------------------------|
-| `search`    | any text                        | Matches title, destination, notes, companions |
-| `status`    | `upcoming` / `ongoing` / `past`  | Filter by trip dates vs today              |
-| `companion` | any text                        | Trips including that companion             |
-| `sort`      | `date` / `budget` / `title`      | Sort order (default `date`)                |
+Response format for `GET /api/trips`:
 
-Each trip also returns computed `spent` and `remaining` values.
+```json
+{
+  "trips": [],
+  "page": 1,
+  "totalPages": 1,
+  "total": 0
+}
+```
 
-## 6. Deploying
+Trip and place validation rules:
 
-- **Backend**: any Node host (Render, Railway, Fly.io, EC2...). Set `MONGO_URI`
-  and `PORT` as environment variables. Point `frontend`'s API base URL at the
-  deployed backend URL instead of the local Vite proxy for production builds.
-- **Frontend**: `npm run build` in `frontend/` produces static files in
-  `frontend/dist/` that can be served from any static host (Netlify, Vercel,
-  S3, etc).
+- Title and destination are required
+- Start and end dates are required and must be valid
+- End date cannot be earlier than the start date
+- Budget must be a non-negative number
+- Passwords must be at least 8 characters and contain a letter and a number
+
+## 6. Deployment
+
+- Backend can be hosted on Render, Railway, Fly.io, Docker, EC2 or any Node-compatible host.
+- Set `MONGO_URI`, `JWT_SECRET`, `PORT`, `JWT_EXPIRES_IN` and `CLIENT_URL` as environment variables.
+- Frontend should use `VITE_API_URL` in production to point to the deployed backend URL.
+- Run `npm run build` in `frontend/` to generate the production bundle in `frontend/dist/`.
 
 ## Notes
 
-- Places live as an embedded array on each Trip document — no separate
-  collection is needed for this feature set, which keeps queries simple.
-- Passwords are hashed with bcrypt before saving and never returned by the API.
-  The login token is kept in the browser's localStorage, which is fine for a
-  local/college project; a production app would normally use an httpOnly cookie.
-- Search and filtering happen server-side in MongoDB, so they still work
-  correctly once you have more trips than fit on one screen.
-- CORS is enabled on the API so the frontend can be hosted separately from
-  the backend in production if you choose to.
+- Places are stored as an embedded sub-document on each trip.
+- Passwords are hashed before saving and never returned in API responses.
+- The API uses CORS restrictions from `CLIENT_URL` and blocks missing required environment variables at startup.
+- The global error handler returns 400 for validation and cast errors, 409 for duplicate keys, and 500 for unhandled issues.

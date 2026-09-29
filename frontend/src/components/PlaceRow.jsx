@@ -24,7 +24,10 @@ export default function PlaceRow({ place, currency, onToggle, onUpdateCost, onDe
 
       <span className="place-row__text">
         <span className="place-row__name">{place.name}</span>
-        {place.notes && <span className="place-row__notes">{place.notes}</span>}
+        <span className="place-row__meta">
+          {place.category && <span className="place-row__category">{place.category || 'Other'}</span>}
+          {place.notes && <span className="place-row__notes">{place.notes}</span>}
+        </span>
       </span>
 
       {editingCost ? (

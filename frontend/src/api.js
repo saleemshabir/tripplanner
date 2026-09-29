@@ -2,7 +2,9 @@ import axios from 'axios';
 
 const TOKEN_KEY = 'waypoint_token';
 
-const api = axios.create({ baseURL: '/api' });
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api'
+});
 
 // Attach the saved login token to every request.
 api.interceptors.request.use((config) => {
@@ -32,14 +34,18 @@ export const fetchMe = () => api.get('/auth/me').then((r) => r.data);
 /* ---------------- Trips ---------------- */
 
 // filters: { search, status, companion, sort }
-export const fetchTrips = (filters = {}) => {
+export const fetchTrips = (filters = {}, page = 1, limit = 10) => {
   const params = Object.fromEntries(
     Object.entries(filters).filter(([, v]) => v !== '' && v !== undefined && v !== null)
   );
-  return api.get('/trips', { params }).then((r) => r.data);
+
+  return api
+    .get('/trips', {
+      params: { ...params, page, limit }
+    })
+    .then((r) => r.data);
 };
 
-export const fetchTrip = (id) => api.get(`/trips/${id}`).then((r) => r.data);
 export const createTrip = (data) => api.post('/trips', data).then((r) => r.data);
 export const updateTrip = (id, data) => api.put(`/trips/${id}`, data).then((r) => r.data);
 export const deleteTrip = (id) => api.delete(`/trips/${id}`).then((r) => r.data);
@@ -51,5 +57,13 @@ export const updatePlace = (tripId, placeId, data) =>
   api.put(`/trips/${tripId}/places/${placeId}`, data).then((r) => r.data);
 export const deletePlace = (tripId, placeId) =>
   api.delete(`/trips/${tripId}/places/${placeId}`).then((r) => r.data);
+
+/* ---------------- Packing ---------------- */
+
+export const addPacking = (tripId, data) => api.post(`/trips/${tripId}/packing`, data).then((r) => r.data);
+export const togglePacking = (tripId, itemId, packed) =>
+  api.put(`/trips/${tripId}/packing/${itemId}`, { packed }).then((r) => r.data);
+export const deletePacking = (tripId, itemId) =>
+  api.delete(`/trips/${tripId}/packing/${itemId}`).then((r) => r.data);
 
 export default api;

@@ -8,7 +8,10 @@ const {
   deleteTrip,
   addPlace,
   updatePlace,
-  deletePlace
+  deletePlace,
+  addPacking,
+  togglePacking,
+  deletePacking
 } = require('../controllers/tripController');
 const { protect } = require('../middleware/auth');
 
@@ -20,5 +23,8 @@ router.route('/:id').get(getTrip).put(updateTrip).delete(deleteTrip);
 
 router.route('/:id/places').post(addPlace);
 router.route('/:id/places/:placeId').put(updatePlace).delete(deletePlace);
+
+router.route('/:id/packing').post(addPacking);
+router.route('/:id/packing/:itemId').put(togglePacking).delete(deletePacking);
 
 module.exports = router;

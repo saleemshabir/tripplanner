@@ -8,10 +8,11 @@ function formatRange(start, end) {
 }
 
 export default function TripCard({ trip, active, onSelect, onDelete }) {
-  const total = trip.places.length;
-  const done = trip.places.filter((p) => p.done).length;
-  const spent = trip.places.reduce((sum, p) => sum + (p.cost || 0), 0);
-  const overBudget = trip.budget > 0 && spent > trip.budget;
+  const total = Array.isArray(trip.places) ? trip.places.length : 0;
+  const done = Array.isArray(trip.places) ? trip.places.filter((p) => p.done).length : 0;
+  const spent = Number.isFinite(trip.spent) ? trip.spent : 0;
+  const remaining = Number.isFinite(trip.remaining) ? trip.remaining : 0;
+  const overBudget = (trip.budget || 0) > 0 && remaining < 0;
 
   return (
     <li className={`trip-card ${active ? 'trip-card--active' : ''}`}>
@@ -28,7 +29,7 @@ export default function TripCard({ trip, active, onSelect, onDelete }) {
                 {done}/{total} visited
               </span>
             )}
-            {trip.budget > 0 && (
+            {(trip.budget || 0) > 0 && (
               <span className={`trip-card__budget ${overBudget ? 'trip-card__budget--over' : ''}`}>
                 {formatMoney(spent, trip.currency)} / {formatMoney(trip.budget, trip.currency)}
               </span>

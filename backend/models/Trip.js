@@ -1,10 +1,23 @@
 const mongoose = require('mongoose');
 
+const packingItemSchema = new mongoose.Schema(
+  {
+    item: { type: String, required: true, trim: true },
+    packed: { type: Boolean, default: false }
+  },
+  { timestamps: true }
+);
+
 const placeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     notes: { type: String, trim: true, default: '' },
     cost: { type: Number, default: 0, min: 0 },
+    category: {
+      type: String,
+      enum: ['Food', 'Stay', 'Transport', 'Sightseeing', 'Shopping', 'Other'],
+      default: 'Other'
+    },
     done: { type: Boolean, default: false }
   },
   { timestamps: true }
@@ -26,7 +39,8 @@ const tripSchema = new mongoose.Schema(
     currency: { type: String, default: 'INR', trim: true },
     companions: { type: [String], default: [] },
     notes: { type: String, trim: true, default: '' },
-    places: { type: [placeSchema], default: [] }
+    places: { type: [placeSchema], default: [] },
+    packing: { type: [packingItemSchema], default: [] }
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
