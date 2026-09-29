@@ -248,7 +248,13 @@ export default function App() {
               <p className="sidebar__brand-subtitle">{user.name}'s journal</p>
             </div>
           </div>
-          <button className="theme-toggle" onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}>
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            aria-pressed={theme === 'dark'}
+          >
             {theme === 'dark' ? '☀️' : '🌙'}
           </button>
         </div>

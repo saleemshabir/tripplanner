@@ -1,50 +1,54 @@
 :root {
   color-scheme: light;
-  --bg: #f5f0ea;
-  --bg-strong: #eadfce;
-  --panel: rgba(255, 252, 247, 0.88);
-  --panel-strong: #fffaf5;
+  --bg: #f6f5e9;
+  --bg-strong: #d8eae3;
+  --page-gradient: linear-gradient(128deg, #fcf7e9 0%, #e4f0e8 52%, #e4e9f2 100%);
+  --panel: rgba(255, 253, 246, 0.9);
+  --panel-strong: #fffdf8;
   --surface: #ffffff;
-  --surface-alt: #f2efe9;
-  --line: #e5d7c7;
-  --line-strong: #cbb8a3;
-  --text: #21303b;
-  --text-soft: #54657a;
-  --text-faint: #7d8890;
-  --primary: #2c6a6b;
-  --primary-strong: #1f4d50;
-  --primary-soft: rgba(44, 106, 107, 0.12);
+  --surface-alt: #edf2ea;
+  --line: #d9e2d7;
+  --line-strong: #afc1b3;
+  --text: #1e302e;
+  --text-soft: #536963;
+  --text-faint: #788780;
+  --primary: #267367;
+  --primary-strong: #18574f;
+  --primary-soft: rgba(38, 115, 103, 0.12);
+  --accent: #dc8054;
   --danger: #c85f47;
   --danger-soft: rgba(200, 95, 71, 0.12);
   --success: #2f8f79;
   --success-soft: rgba(47, 143, 121, 0.12);
   --warning: #d9a441;
-  --shadow: 0 16px 40px rgba(31, 44, 53, 0.12);
+  --shadow: 0 18px 48px rgba(32, 58, 48, 0.12);
   --radius: 18px;
 }
 
 html[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #111827;
-  --bg-strong: #1b2432;
-  --panel: rgba(17, 24, 39, 0.88);
-  --panel-strong: #1d2938;
-  --surface: #182334;
-  --surface-alt: #1d2a3b;
-  --line: #2a3b52;
-  --line-strong: #3b536d;
-  --text: #edf3ff;
-  --text-soft: #b9c6d9;
-  --text-faint: #8ca0ba;
-  --primary: #7fd1c5;
-  --primary-strong: #9ae2d8;
-  --primary-soft: rgba(127, 209, 197, 0.18);
+  --bg: #101a1b;
+  --bg-strong: #1b302d;
+  --page-gradient: linear-gradient(128deg, #11191b 0%, #18312e 54%, #292638 100%);
+  --panel: rgba(17, 27, 28, 0.9);
+  --panel-strong: #192625;
+  --surface: #1d2d2b;
+  --surface-alt: #223431;
+  --line: #314844;
+  --line-strong: #46645d;
+  --text: #edf2e8;
+  --text-soft: #bdcfc4;
+  --text-faint: #8fa79c;
+  --primary: #81cfb7;
+  --primary-strong: #a0dfc6;
+  --primary-soft: rgba(129, 207, 183, 0.16);
+  --accent: #f0a274;
   --danger: #ff8c72;
   --danger-soft: rgba(255, 140, 114, 0.2);
   --success: #75d3a4;
   --success-soft: rgba(117, 211, 164, 0.16);
   --warning: #f0c76a;
-  --shadow: 0 18px 40px rgba(2, 8, 18, 0.55);
+  --shadow: 0 22px 54px rgba(0, 8, 8, 0.42);
 }
 
 * { box-sizing: border-box; }
@@ -53,9 +57,39 @@ html, body, #root {
   margin: 0;
   min-height: 100%;
   min-height: 100vh;
-  font-family: Inter, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, var(--bg), var(--bg-strong));
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateX(12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  @keyframes float-mark {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-5px) rotate(2deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  font-family: 'Aptos', 'Segoe UI', sans-serif;
+  background: var(--page-gradient);
+  background-attachment: fixed;
   color: var(--text);
+  transition: color 240ms ease, background-color 240ms ease;
 }
 
 body {
@@ -68,6 +102,19 @@ button, input, select, textarea {
 
 button {
   cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 65%, transparent);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--text);
+  background: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 input, select, textarea {
@@ -84,18 +131,22 @@ input::placeholder, textarea::placeholder {
 
 .app {
   display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
   min-height: 100vh;
 }
 
 .sidebar {
   background: var(--panel);
   border-right: 1px solid var(--line);
-  padding: 1.2rem 1rem 1rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.4rem 1.1rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  backdrop-filter: blur(6px);
+  gap: 1.1rem;
+  backdrop-filter: blur(16px);
 }
 
 .sidebar__brand-row {
@@ -112,19 +163,23 @@ input::placeholder, textarea::placeholder {
 }
 
 .sidebar__brand-mark {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 14px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--primary-soft), rgba(255,255,255,0.18));
-  color: var(--primary);
+  background: linear-gradient(145deg, var(--primary), var(--primary-strong));
+  color: #fffdf4;
   font-size: 1.2rem;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--primary) 24%, transparent);
+  transform: rotate(-5deg);
 }
 
 .sidebar__brand-title {
   margin: 0;
   font-size: 1.4rem;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  letter-spacing: 0;
 }
 
 .sidebar__brand-subtitle {
@@ -140,6 +195,13 @@ input::placeholder, textarea::placeholder {
   border: 1px solid var(--line);
   background: var(--surface-alt);
   color: var(--text);
+  transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(-12deg) translateY(-2px);
+  border-color: var(--primary);
+  background: var(--primary-soft);
 }
 
 .btn {
@@ -147,16 +209,20 @@ input::placeholder, textarea::placeholder {
   border-radius: 12px;
   padding: 0.8rem 1rem;
   font-weight: 600;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
-.btn:hover { transform: translateY(-1px); }
+.btn:hover { transform: translateY(-2px); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn--primary {
-  background: var(--primary);
-  color: white;
-  box-shadow: var(--shadow);
+  background: linear-gradient(125deg, var(--primary), var(--primary-strong));
+  color: #fffdf6;
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .btn--ghost {
@@ -242,6 +308,7 @@ input::placeholder, textarea::placeholder {
 }
 
 .trip-card {
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
@@ -249,12 +316,23 @@ input::placeholder, textarea::placeholder {
   border-radius: 16px;
   background: var(--surface);
   overflow: hidden;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  animation: rise-in 420ms both;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.trip-card:nth-child(2) { animation-delay: 45ms; }
+.trip-card:nth-child(3) { animation-delay: 90ms; }
+.trip-card:nth-child(4) { animation-delay: 135ms; }
+
+.trip-card:hover {
+  transform: translateX(3px);
+  border-color: var(--line-strong);
 }
 
 .trip-card--active {
   border-color: var(--primary);
-  box-shadow: inset 0 0 0 1px var(--primary);
+  background: linear-gradient(110deg, var(--primary-soft), var(--surface) 78%);
+  box-shadow: inset 3px 0 var(--primary), 0 9px 22px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .trip-card__main {
@@ -270,9 +348,14 @@ input::placeholder, textarea::placeholder {
 }
 
 .trip-card__pin {
-  color: var(--warning);
+  color: var(--accent);
   font-size: 1.2rem;
   padding-top: 0.25rem;
+  transition: transform 220ms ease;
+}
+
+.trip-card:hover .trip-card__pin {
+  transform: rotate(24deg) scale(1.1);
 }
 
 .trip-card__body {
@@ -328,6 +411,13 @@ input::placeholder, textarea::placeholder {
   background: transparent;
   color: var(--text-faint);
   font-size: 1.1rem;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.trip-card__delete:hover,
+.place-row__delete:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
 }
 
 .trip-card__skeleton-line {
@@ -381,17 +471,34 @@ input::placeholder, textarea::placeholder {
 }
 
 .main {
-  padding: 1.5rem 1.5rem 2rem;
+  padding: 2rem clamp(1rem, 4vw, 3.5rem) 3rem;
 }
 
 .passport {
-  max-width: 980px;
+  max-width: 1040px;
   margin: 0 auto;
   background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: 24px;
   box-shadow: var(--shadow);
-  padding: 1.5rem;
+  padding: clamp(1.1rem, 3vw, 2rem);
+  animation: rise-in 500ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+  overflow: hidden;
+}
+
+.passport__header {
+  position: relative;
+}
+
+.passport__header::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.85rem;
+  left: 0;
+  height: 2px;
+  content: '';
+  background: linear-gradient(90deg, var(--primary), var(--accent) 58%, transparent);
+  opacity: 0.55;
 }
 
 .passport__header {
@@ -411,8 +518,11 @@ input::placeholder, textarea::placeholder {
 
 .passport__title {
   margin: 0;
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: 3rem;
   line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--text);
 }
 
 .passport__subtitle {
@@ -430,12 +540,18 @@ input::placeholder, textarea::placeholder {
 .passport__stamp-mark {
   width: 82px;
   min-height: 82px;
-  border-radius: 18px;
+  border-radius: 14px;
   border: 2px dashed var(--primary);
   display: grid;
   place-items: center;
   color: var(--primary);
-  background: var(--primary-soft);
+  background: linear-gradient(145deg, var(--primary-soft), color-mix(in srgb, var(--accent) 16%, transparent));
+  transform: rotate(4deg);
+  transition: transform 220ms ease;
+}
+
+.passport__stamp-mark:hover {
+  transform: rotate(0deg) scale(1.04);
 }
 
 .passport__stamp-mark span {
@@ -488,8 +604,9 @@ input::placeholder, textarea::placeholder {
 }
 
 .passport__meta-divider {
-  color: var(--primary);
+  color: var(--accent);
   font-size: 1.2rem;
+  animation: drift 3s ease-in-out infinite;
 }
 
 .companions {
@@ -536,7 +653,7 @@ input::placeholder, textarea::placeholder {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  background: var(--surface-alt);
+  background: linear-gradient(125deg, var(--surface-alt), var(--primary-soft));
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1rem;
@@ -552,10 +669,12 @@ input::placeholder, textarea::placeholder {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  border-radius: 14px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  padding: 0.75rem 0.9rem;
+  border-left: 1px solid var(--line-strong);
+  padding: 0.25rem 0.9rem;
+}
+
+.budget__figure:first-child {
+  border-left: 0;
 }
 
 .budget__figure-label {
@@ -583,8 +702,9 @@ input::placeholder, textarea::placeholder {
 
 .budget__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--primary-strong));
+  background: linear-gradient(90deg, var(--primary), var(--accent));
   border-radius: inherit;
+  transition: width 450ms cubic-bezier(0.2, 0.75, 0.3, 1);
 }
 
 .budget__fill--over {
@@ -631,7 +751,8 @@ input::placeholder, textarea::placeholder {
 
 .passport__progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--success), var(--primary));
+  background: linear-gradient(90deg, var(--success), var(--primary), var(--accent));
+  transition: width 450ms cubic-bezier(0.2, 0.75, 0.3, 1);
 }
 
 .passport__progress-label {
@@ -642,6 +763,8 @@ input::placeholder, textarea::placeholder {
 .passport__section-heading {
   margin: 0 0 0.8rem;
   font-size: 1.15rem;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  letter-spacing: 0;
 }
 
 .place-list, .packing-list__items {
@@ -662,6 +785,13 @@ input::placeholder, textarea::placeholder {
   background: var(--surface);
   border-radius: 12px;
   padding: 0.7rem 0.75rem;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.place-row:hover {
+  transform: translateX(3px);
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 82%, var(--primary-soft));
 }
 
 .place-row--done {
@@ -676,6 +806,13 @@ input::placeholder, textarea::placeholder {
   background: var(--surface-alt);
   color: var(--success);
   font-weight: 700;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.place-row__stamp:hover {
+  transform: scale(1.08);
+  border-color: var(--success);
+  background: var(--success-soft);
 }
 
 .place-row__text {
@@ -751,7 +888,7 @@ input::placeholder, textarea::placeholder {
   margin-top: 1rem;
   display: grid;
   gap: 0.7rem;
-  background: var(--surface-alt);
+  background: linear-gradient(135deg, var(--surface-alt), var(--panel-strong));
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1rem;
@@ -802,6 +939,12 @@ input::placeholder, textarea::placeholder {
   border-radius: 12px;
   background: var(--surface);
   padding: 0.7rem 0.8rem;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.packing-item:hover {
+  transform: translateX(2px);
+  border-color: var(--line-strong);
 }
 
 .packing-item label {
@@ -836,11 +979,12 @@ input::placeholder, textarea::placeholder {
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background: var(--surface-alt);
+  background: linear-gradient(145deg, var(--primary-soft), color-mix(in srgb, var(--accent) 20%, transparent));
   border: 1px solid var(--line);
   color: var(--primary);
   font-size: 2rem;
   margin-bottom: 1rem;
+  animation: float-mark 3.6s ease-in-out infinite;
 }
 
 .empty-state h2 {
@@ -860,7 +1004,7 @@ input::placeholder, textarea::placeholder {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: linear-gradient(140deg, rgba(44,106,107,0.08), rgba(255,255,255,0.15));
+  background: linear-gradient(140deg, var(--primary-soft), color-mix(in srgb, var(--accent) 10%, transparent));
 }
 
 .auth-panel__brand {
@@ -873,15 +1017,19 @@ input::placeholder, textarea::placeholder {
   place-items: center;
   width: 4.5rem;
   height: 4.5rem;
-  border-radius: 50%;
-  background: var(--primary-soft);
-  color: var(--primary);
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--primary), var(--primary-strong));
+  color: #fffdf6;
   font-size: 2rem;
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--primary) 24%, transparent);
+  transform: rotate(-5deg);
 }
 
 .auth-panel__brand h1 {
   margin: 1rem 0 0.5rem;
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: 3.5rem;
+  letter-spacing: 0;
 }
 
 .auth-panel__brand p {
@@ -904,11 +1052,14 @@ input::placeholder, textarea::placeholder {
   border-radius: 22px;
   box-shadow: var(--shadow);
   padding: 1.5rem;
+  animation: rise-in 500ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
 
 .auth-form__heading {
   margin: 0;
   font-size: 2rem;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  letter-spacing: 0;
 }
 
 .auth-form__sub {
@@ -962,7 +1113,8 @@ input::placeholder, textarea::placeholder {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(14, 22, 28, 0.38);
+  background: rgba(9, 20, 19, 0.52);
+  backdrop-filter: blur(8px);
   display: grid;
   place-items: center;
   padding: 1rem;
@@ -977,6 +1129,7 @@ input::placeholder, textarea::placeholder {
   border-radius: 22px;
   box-shadow: var(--shadow);
   padding: 1.2rem;
+  animation: rise-in 260ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
 
 .modal-card__heading {
@@ -1021,6 +1174,7 @@ input::placeholder, textarea::placeholder {
   border-radius: 12px;
   padding: 0.8rem 1rem;
   color: var(--text);
+  animation: toast-in 240ms ease-out both;
 }
 
 .toast--success {
@@ -1086,4 +1240,5 @@ input::placeholder, textarea::placeholder {
     grid-column: 2 / span 2;
     width: 100%;
   }
+
 }
